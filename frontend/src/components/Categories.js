@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Grid, Jumbotron, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { fetchCategories } from '../actions/index';
 
@@ -41,5 +42,10 @@ function mapDispatchToProps(dispatch) {
     loadCategories: () => dispatch(fetchCategories()),
   };
 }
+
+Categories.propTypes = {
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loadCategories: PropTypes.func.isRequired,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);
