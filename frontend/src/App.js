@@ -1,32 +1,40 @@
 import React, { Component } from 'react';
-import { Grid, Navbar, Jumbotron, Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import {
+  Grid,
+  Navbar,
+  Jumbotron,
+  ListGroup,
+  ListGroupItem,
+} from 'react-bootstrap';
+import { fetchCategories } from './actions';
 
 class App extends Component {
+  componentDidMount() {
+    this.props.loadCategories();
+  }
+
   render() {
     return (
       <div>
-        <Navbar inverse fixedTop>
-          <Grid>
-            <Navbar.Header>
-              <Navbar.Brand>
-                <a href="/">React App</a>
-              </Navbar.Brand>
-              <Navbar.Toggle />
-            </Navbar.Header>
-          </Grid>
+        <Navbar inverse>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <a href="/">Redux Nanodegree&apos;s Project: Readable</a>
+            </Navbar.Brand>
+          </Navbar.Header>
         </Navbar>
         <Jumbotron>
           <Grid>
-            <h1>Welcome to React</h1>
-            <p>
-              <Button
-                bsStyle="success"
-                bsSize="large"
-                href="http://react-bootstrap.github.io/components.html"
-                target="_blank">
-                View React Bootstrap Docs
-              </Button>
-            </p>
+            <h2>Categories</h2>
+            <ListGroup>
+              {this.props.categories &&
+                this.props.categories.map(category => (
+                  <ListGroupItem key={category.name} href={`/${category.path}`}>
+                    {category.name}
+                  </ListGroupItem>
+                ))}
+            </ListGroup>
           </Grid>
         </Jumbotron>
       </div>
@@ -34,4 +42,14 @@ class App extends Component {
   }
 }
 
-export default App;
+function mapStateToProps({ categories }) {
+  return { categories };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    loadCategories: () => dispatch(fetchCategories()),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
