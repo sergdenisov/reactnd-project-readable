@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Navbar } from 'react-bootstrap';
-import Categories from './Categories';
-import Posts from './Posts';
+import Categories from '../Categories/Categories';
+import Posts from '../Posts/Posts';
 
 class App extends Component {
   render() {
