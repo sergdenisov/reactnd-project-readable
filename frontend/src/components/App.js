@@ -7,7 +7,7 @@ import {
   ListGroup,
   ListGroupItem,
 } from 'react-bootstrap';
-import { fetchCategories } from './actions';
+import { fetchCategories } from '../actions/index';
 
 class App extends Component {
   componentDidMount() {
