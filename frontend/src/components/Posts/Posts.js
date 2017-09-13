@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Grid, Jumbotron, ListGroup, ListGroupItem } from 'react-bootstrap';
-import { fetchPosts } from '../actions/posts';
+import {
+  Grid,
+  Jumbotron,
+  ListGroup,
+  ListGroupItem,
+  Label,
+} from 'react-bootstrap';
+import timestampToDate from '../../utils/timestampToDate';
+import { fetchPosts } from '../../actions/posts';
+import './Posts.css';
 
 class Posts extends Component {
   componentDidMount() {
@@ -22,8 +30,20 @@ class Posts extends Component {
           <h2>Posts</h2>
           <ListGroup>
             {posts.map(post => (
-              <ListGroupItem key={post.id} href={`/${post.id}`}>
-                {post.title}
+              <ListGroupItem
+                key={post.id}
+                header={post.title}
+                href={`/post/${post.id}`}>
+                <span className="post-details">
+                  <span className="post-details__author">{post.author}</span>
+                  <span className="post-details__additional">
+                    <Label bsStyle="primary">{post.voteScore}</Label>{' '}
+                    <Label bsStyle="info">{post.category}</Label>
+                    <span className="post-details__date">
+                      {timestampToDate(post.timestamp)}
+                    </span>
+                  </span>
+                </span>
               </ListGroupItem>
             ))}
           </ListGroup>
