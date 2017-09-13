@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Navbar } from 'react-bootstrap';
 import Categories from './Categories';
+import Posts from './Posts';
 
 class App extends Component {
   render() {
@@ -14,6 +15,7 @@ class App extends Component {
           </Navbar.Header>
         </Navbar>
         <Categories />
+        <Posts />
       </div>
     );
   }

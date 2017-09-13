@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid, Jumbotron, ListGroup, ListGroupItem } from 'react-bootstrap';
-import { fetchCategories } from '../actions/index';
+import { fetchCategories } from '../actions/categories';
 
 class Categories extends Component {
   componentDidMount() {
