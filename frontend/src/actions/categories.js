@@ -1,4 +1,4 @@
-import * as API from '../utils/API';
+import * as api from '../utils/api';
 
 export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES';
 
@@ -8,6 +8,6 @@ export const receiveCategories = categories => ({
 });
 
 export const fetchCategories = () => dispatch =>
-  API.fetchCategories().then(categories =>
-    dispatch(receiveCategories(categories)),
-  );
+  api
+    .fetchCategories()
+    .then(categories => dispatch(receiveCategories(categories)));

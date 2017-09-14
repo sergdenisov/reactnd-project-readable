@@ -1,3 +1,13 @@
+.posts {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+  .posts__sort {
+    margin-bottom: 10px;
+  }
+
 .post-details {
   display: block;
 }

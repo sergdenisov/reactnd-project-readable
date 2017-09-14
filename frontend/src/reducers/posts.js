@@ -1,9 +1,23 @@
-import { RECEIVE_POSTS } from '../actions/posts';
+import { RECEIVE_POSTS, SORT_POSTS_BY } from '../actions/posts';
+import * as sortOptions from '../utils/sortOptions';
 
-function posts(state = [], action) {
+const defaultState = {
+  items: [],
+  sortBy: sortOptions.getDefault(),
+};
+
+function posts(state = defaultState, action) {
   switch (action.type) {
     case RECEIVE_POSTS:
-      return [...state, ...action.posts];
+      return {
+        ...state,
+        items: [...state.items, ...action.posts],
+      };
+    case SORT_POSTS_BY:
+      return {
+        ...state,
+        sortBy: action.sortBy,
+      };
     default:
       return state;
   }
