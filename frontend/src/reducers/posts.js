@@ -1,4 +1,4 @@
-import { RECEIVE_POSTS, SORT_POSTS_BY } from '../actions/posts';
+import { ADD_POSTS, SORT_POSTS_BY } from '../actions/posts';
 import * as sortOptions from '../utils/sortOptions';
 
 const defaultState = {
@@ -8,7 +8,7 @@ const defaultState = {
 
 function posts(state = defaultState, action) {
   switch (action.type) {
-    case RECEIVE_POSTS:
+    case ADD_POSTS:
       return {
         ...state,
         items: [...state.items, ...action.posts],

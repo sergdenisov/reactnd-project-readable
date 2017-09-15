@@ -1,3 +1,7 @@
+html {
+  min-width: 400px;
+}
+
 .navbar, .jumbotron {
   margin-bottom: 0;
 }
