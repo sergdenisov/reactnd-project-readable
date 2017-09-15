@@ -1,23 +1,9 @@
-import { ADD_POSTS, SORT_POSTS_BY } from '../actions/posts';
-import * as sortOptions from '../utils/sortOptions';
+import { ADD_POSTS } from '../actions/posts';
 
-const defaultState = {
-  items: [],
-  sortBy: sortOptions.getDefault(),
-};
-
-function posts(state = defaultState, action) {
+function posts(state = [], action) {
   switch (action.type) {
     case ADD_POSTS:
-      return {
-        ...state,
-        items: [...state.items, ...action.posts],
-      };
-    case SORT_POSTS_BY:
-      return {
-        ...state,
-        sortBy: action.sortBy,
-      };
+      return [...state, ...action.posts];
     default:
       return state;
   }
