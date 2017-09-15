@@ -1,8 +1,8 @@
-import { RECEIVE_CATEGORIES } from '../actions/categories';
+import { ADD_CATEGORIES } from '../actions/categories';
 
 function categories(state = [], action) {
   switch (action.type) {
-    case RECEIVE_CATEGORIES:
+    case ADD_CATEGORIES:
       return [...state, ...action.categories];
     default:
       return state;
