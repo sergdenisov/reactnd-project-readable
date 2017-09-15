@@ -19,11 +19,12 @@ import {
 } from 'react-bootstrap';
 import * as sortOptions from '../../utils/sortOptions';
 import timestampToDate from '../../utils/timestampToDate';
-import { getPosts, sortPostsBy, postPost } from '../../actions/posts';
+import { getPosts, postPost } from '../../actions/posts';
 import './Posts.css';
 
 class Posts extends Component {
   state = {
+    sortBy: sortOptions.getDefault(),
     isModalOpen: false,
     modalForm: {},
   };
@@ -50,9 +51,8 @@ class Posts extends Component {
 
   render() {
     const { posts, actions, categories } = this.props;
-    const { items, sortBy } = posts;
-    const sortedItems = items.sort(sortOptions.getCompareFunction(sortBy));
-    const { isModalOpen, modalForm } = this.state;
+    const { sortBy, isModalOpen, modalForm } = this.state;
+    const sortedItems = posts.sort(sortOptions.getCompareFunction(sortBy));
 
     return (
       <Jumbotron>
@@ -67,7 +67,7 @@ class Posts extends Component {
                   </span>
                 }
                 onSelect={(eventKey, event) => {
-                  actions.sortPostsBy(eventKey);
+                  this.setState({ sortBy: eventKey });
                   event.target.blur();
                 }}
                 id="posts-sort">
@@ -180,18 +180,14 @@ function mapStateToProps({ posts, categories }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ getPosts, sortPostsBy, postPost }, dispatch),
+    actions: bindActionCreators({ getPosts, postPost }, dispatch),
   };
 }
 
 Posts.propTypes = {
-  posts: PropTypes.PropTypes.shape({
-    items: PropTypes.arrayOf(PropTypes.object).isRequired,
-    sortBy: PropTypes.oneOf(sortOptions.getAll().map(([key]) => key)),
-  }).isRequired,
+  posts: PropTypes.PropTypes.arrayOf(PropTypes.object).isRequired,
   actions: PropTypes.PropTypes.shape({
     getPosts: PropTypes.func.isRequired,
-    sortPostsBy: PropTypes.func.isRequired,
     postPost: PropTypes.func.isRequired,
   }).isRequired,
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
