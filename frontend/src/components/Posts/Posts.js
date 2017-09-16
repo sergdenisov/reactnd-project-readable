@@ -12,46 +12,34 @@ import {
   DropdownButton,
   MenuItem,
   Button,
-  Modal,
-  FormGroup,
-  FormControl,
-  ControlLabel,
 } from 'react-bootstrap';
 import * as sortOptions from '../../utils/sortOptions';
 import timestampToDate from '../../utils/timestampToDate';
-import { getPosts, postPost } from '../../actions/posts';
+import { getPosts } from '../../actions/posts';
 import './Posts.css';
+import PostModal from '../PostModal/PostModal';
 
 class Posts extends Component {
   state = {
     sortBy: sortOptions.getDefault(),
     isModalOpen: false,
-    modalForm: {},
   };
 
   componentDidMount() {
     this.props.actions.getPosts();
   }
 
-  toggleModal(isShown) {
-    this.setState({ isModalOpen: isShown });
-  }
+  openModal = () => {
+    this.setState({ isModalOpen: true });
+  };
 
-  handleFormControlChange = event => {
-    const { name, value } = event.target;
-
-    this.setState(prevState => ({
-      ...prevState,
-      modalForm: {
-        ...prevState.modalForm,
-        [name]: value,
-      },
-    }));
+  closeModal = () => {
+    this.setState({ isModalOpen: false });
   };
 
   render() {
-    const { posts, actions, categories } = this.props;
-    const { sortBy, isModalOpen, modalForm } = this.state;
+    const { posts } = this.props;
+    const { sortBy, isModalOpen } = this.state;
     const sortedItems = posts.sort(sortOptions.getCompareFunction(sortBy));
 
     return (
@@ -77,7 +65,7 @@ class Posts extends Component {
                   </MenuItem>
                 ))}
               </DropdownButton>
-              <Button bsStyle="primary" onClick={() => this.toggleModal(true)}>
+              <Button bsStyle="primary" onClick={this.openModal}>
                 Add post
               </Button>
             </ButtonToolbar>
@@ -101,86 +89,20 @@ class Posts extends Component {
               </ListGroupItem>
             ))}
           </ListGroup>
-          <Modal
-            show={isModalOpen}
-            onHide={() => this.toggleModal(false)}
-            restoreFocus={false}>
-            <form
-              onSubmit={event => {
-                event.preventDefault();
-                actions.postPost(modalForm);
-                this.toggleModal(false);
-              }}>
-              <Modal.Header closeButton>
-                <Modal.Title>Add a new post</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <FormGroup>
-                  <ControlLabel>Author</ControlLabel>
-                  <FormControl
-                    type="text"
-                    placeholder="Enter post author's name"
-                    name="author"
-                    value={modalForm.author}
-                    onChange={this.handleFormControlChange}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>Title</ControlLabel>
-                  <FormControl
-                    type="text"
-                    placeholder="Enter post's title"
-                    name="title"
-                    value={modalForm.title}
-                    onChange={this.handleFormControlChange}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>Category</ControlLabel>
-                  <FormControl
-                    componentClass="select"
-                    name="category"
-                    value={modalForm.category}
-                    onChange={this.handleFormControlChange}>
-                    {categories.map(item => (
-                      <option value={item.name} key={item.name}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>Body</ControlLabel>
-                  <FormControl
-                    componentClass="textarea"
-                    placeholder="Enter post's body"
-                    name="body"
-                    value={modalForm.body}
-                    onChange={this.handleFormControlChange}
-                  />
-                </FormGroup>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button onClick={() => this.toggleModal(false)}>Close</Button>
-                <Button bsStyle="primary" type="submit">
-                  Add post
-                </Button>
-              </Modal.Footer>
-            </form>
-          </Modal>
         </Grid>
+        <PostModal isOpen={isModalOpen} onClose={this.closeModal} />
       </Jumbotron>
     );
   }
 }
 
-function mapStateToProps({ posts, categories }) {
-  return { posts, categories };
+function mapStateToProps({ posts }) {
+  return { posts };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ getPosts, postPost }, dispatch),
+    actions: bindActionCreators({ getPosts }, dispatch),
   };
 }
 
@@ -188,9 +110,7 @@ Posts.propTypes = {
   posts: PropTypes.PropTypes.arrayOf(PropTypes.object).isRequired,
   actions: PropTypes.PropTypes.shape({
     getPosts: PropTypes.func.isRequired,
-    postPost: PropTypes.func.isRequired,
   }).isRequired,
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Posts);
