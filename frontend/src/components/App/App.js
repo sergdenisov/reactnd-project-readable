@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
 import { Navbar } from 'react-bootstrap';
 import Categories from '../Categories/Categories';
 import Posts from '../Posts/Posts';
@@ -14,8 +15,16 @@ class App extends Component {
             </Navbar.Brand>
           </Navbar.Header>
         </Navbar>
-        <Categories />
-        <Posts />
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <div>
+              <Categories />
+              <Posts />
+            </div>
+          )}
+        />
       </div>
     );
   }
