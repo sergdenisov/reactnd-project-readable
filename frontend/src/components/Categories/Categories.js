@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid, Jumbotron, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import { getCategories } from '../../actions/categories';
 
 class Categories extends Component {
@@ -19,9 +20,11 @@ class Categories extends Component {
           <h2>Categories</h2>
           <ListGroup>
             {categories.map(category => (
-              <ListGroupItem key={category.name} href={`/${category.path}`}>
-                {category.name}
-              </ListGroupItem>
+              <LinkContainer
+                to={`/categories/${category.path}`}
+                key={category.name}>
+                <ListGroupItem>{category.name}</ListGroupItem>
+              </LinkContainer>
             ))}
           </ListGroup>
         </Grid>
