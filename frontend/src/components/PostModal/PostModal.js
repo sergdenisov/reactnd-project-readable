@@ -13,31 +13,32 @@ import { postPost } from '../../actions/posts';
 
 class PostModal extends Component {
   state = {
-    form: {},
+    author: '',
+    title: '',
+    category: '',
+    body: '',
   };
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ category: nextProps.categories[0].name });
+  }
 
   handleFormControlChange = event => {
     const { name, value } = event.target;
 
-    this.setState(prevState => ({
-      ...prevState,
-      form: {
-        ...prevState.form,
-        [name]: value,
-      },
-    }));
+    this.setState({ [name]: value });
   };
 
   render() {
     const { isOpen, onClose, actions, categories } = this.props;
-    const { form } = this.state;
+    const { author, title, category, body } = this.state;
 
     return (
       <Modal show={isOpen} onHide={onClose} restoreFocus={false}>
         <form
           onSubmit={event => {
             event.preventDefault();
-            actions.postPost(form);
+            actions.postPost(this.state);
             onClose();
           }}>
           <Modal.Header closeButton>
@@ -50,7 +51,7 @@ class PostModal extends Component {
                 type="text"
                 placeholder="Enter post author's name"
                 name="author"
-                value={form.author}
+                value={author}
                 onChange={this.handleFormControlChange}
               />
             </FormGroup>
@@ -60,7 +61,7 @@ class PostModal extends Component {
                 type="text"
                 placeholder="Enter post's title"
                 name="title"
-                value={form.title}
+                value={title}
                 onChange={this.handleFormControlChange}
               />
             </FormGroup>
@@ -69,7 +70,7 @@ class PostModal extends Component {
               <FormControl
                 componentClass="select"
                 name="category"
-                value={form.category}
+                value={category}
                 onChange={this.handleFormControlChange}>
                 {categories.map(item => (
                   <option value={item.name} key={item.name}>
@@ -84,7 +85,7 @@ class PostModal extends Component {
                 componentClass="textarea"
                 placeholder="Enter post's body"
                 name="body"
-                value={form.body}
+                value={body}
                 onChange={this.handleFormControlChange}
               />
             </FormGroup>
