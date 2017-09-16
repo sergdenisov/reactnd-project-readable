@@ -1,18 +1,7 @@
-import uuidv4 from 'uuid/v4';
-
 const api = 'http://localhost:3001';
 
-let token = localStorage.token;
-
-if (!token) {
-  token = Math.random()
-    .toString(36)
-    .substr(-8);
-  localStorage.token = uuidv4();
-}
-
 const headers = {
-  Authorization: token,
+  Authorization: 'sergdenisov',
   Accept: 'application/json',
   'Content-Type': 'application/json',
 };
