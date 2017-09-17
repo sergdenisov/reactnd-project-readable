@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -15,7 +14,6 @@ import {
 } from 'react-bootstrap';
 import * as sortOptions from '../../utils/sortOptions';
 import timestampToDate from '../../utils/timestampToDate';
-import { getPosts } from '../../actions/posts';
 import './Posts.css';
 import PostModal from '../PostModal/PostModal';
 
@@ -24,10 +22,6 @@ class Posts extends Component {
     sortBy: sortOptions.getDefault(),
     isModalOpen: false,
   };
-
-  componentDidMount() {
-    this.props.actions.getPosts();
-  }
 
   openModal = () => {
     this.setState({ isModalOpen: true });
@@ -40,7 +34,12 @@ class Posts extends Component {
   render() {
     const { posts, category } = this.props;
     const { sortBy, isModalOpen } = this.state;
-    const sortedItems = posts.sort(sortOptions.getCompareFunction(sortBy));
+    const filteredItems = posts.filter(
+      item => !category || item.category === category,
+    );
+    const sortedItems = filteredItems.sort(
+      sortOptions.getCompareFunction(sortBy),
+    );
 
     return (
       <Jumbotron>
@@ -105,22 +104,13 @@ function mapStateToProps({ posts }) {
   return { posts };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators({ getPosts }, dispatch),
-  };
-}
-
 Posts.propTypes = {
   category: PropTypes.string,
   posts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  actions: PropTypes.shape({
-    getPosts: PropTypes.func.isRequired,
-  }).isRequired,
 };
 
 Posts.defaultProps = {
   category: '',
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Posts);
+export default connect(mapStateToProps)(Posts);
