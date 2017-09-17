@@ -11,6 +11,13 @@ import Categories from '../Categories/Categories';
 import Posts from '../Posts/Posts';
 
 class App extends Component {
+  static propTypes = {
+    actions: PropTypes.shape({
+      getCategories: PropTypes.func.isRequired,
+      getPosts: PropTypes.func.isRequired,
+    }).isRequired,
+  };
+
   componentDidMount() {
     this.props.actions.getCategories();
     this.props.actions.getPosts();
@@ -57,12 +64,5 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators({ getCategories, getPosts }, dispatch),
   };
 }
-
-App.propTypes = {
-  actions: PropTypes.shape({
-    getCategories: PropTypes.func.isRequired,
-    getPosts: PropTypes.func.isRequired,
-  }).isRequired,
-};
 
 export default withRouter(connect(null, mapDispatchToProps)(App));

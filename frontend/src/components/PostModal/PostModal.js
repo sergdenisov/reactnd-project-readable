@@ -12,6 +12,21 @@ import {
 import { postPost } from '../../actions/posts';
 
 class PostModal extends Component {
+  static propTypes = {
+    isOpen: PropTypes.bool,
+    categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+    fixedCategory: PropTypes.string,
+    actions: PropTypes.shape({
+      postPost: PropTypes.func.isRequired,
+    }).isRequired,
+    onClose: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    isOpen: false,
+    fixedCategory: '',
+  };
+
   state = {
     author: '',
     title: '',
@@ -115,20 +130,5 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators({ postPost }, dispatch),
   };
 }
-
-PostModal.propTypes = {
-  isOpen: PropTypes.bool,
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
-  fixedCategory: PropTypes.string,
-  actions: PropTypes.shape({
-    postPost: PropTypes.func.isRequired,
-  }).isRequired,
-  onClose: PropTypes.func.isRequired,
-};
-
-PostModal.defaultProps = {
-  isOpen: false,
-  fixedCategory: '',
-};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);
