@@ -12,6 +12,10 @@ function posts(state = [], action) {
     case ADD_POST:
       return [...state, enrichPost(action.post)];
     case EDIT_POST:
+      if (action.post.deleted) {
+        return state.filter(item => item.id !== action.post.id);
+      }
+
       return state.map(
         item => (item.id === action.post.id ? enrichPost(action.post) : item),
       );

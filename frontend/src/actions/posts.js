@@ -41,3 +41,6 @@ export const editPost = post => ({
 
 export const votePost = data => dispatch =>
   api.votePost(data).then(post => dispatch(editPost(post)));
+
+export const deletePost = postId => dispatch =>
+  api.deletePost(postId).then(post => dispatch(editPost(post)));
