@@ -45,3 +45,8 @@
     cursor: default !important;
     min-width: 26px;
   }
+
+  .post__toolbar {
+    display: inline-block;
+    vertical-align: middle;
+  }
