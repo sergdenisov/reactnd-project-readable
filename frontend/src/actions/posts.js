@@ -1,16 +1,29 @@
 import uuidv4 from 'uuid/v4';
 import * as api from '../utils/api';
+import { getPostComments } from './comments';
 
-export const ADD_POSTS = 'ADD_POSTS';
+export const SET_POSTS = 'SET_POSTS';
+export const ADD_POST = 'SET_POST';
 export const EDIT_POST = 'EDIT_POST';
 
-export const addPosts = posts => ({
-  type: ADD_POSTS,
+export const setPosts = posts => ({
+  type: SET_POSTS,
   posts,
 });
 
-export const getPosts = () => dispatch =>
-  api.getPosts().then(posts => dispatch(addPosts(posts)));
+export const getPosts = category => dispatch => {
+  const promise = category ? api.getPostsByCategory(category) : api.getPosts();
+
+  promise.then(posts => {
+    dispatch(setPosts(posts));
+    posts.forEach(post => dispatch(getPostComments(post.id)));
+  });
+};
+
+export const addPost = post => ({
+  type: ADD_POST,
+  post,
+});
 
 export const postPost = inputData => dispatch =>
   api
@@ -19,7 +32,7 @@ export const postPost = inputData => dispatch =>
       id: uuidv4(),
       timestamp: Date.now(),
     })
-    .then(post => dispatch(addPosts([post])));
+    .then(post => dispatch(addPost(post)));
 
 export const editPost = post => ({
   type: EDIT_POST,

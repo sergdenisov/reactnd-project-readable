@@ -16,6 +16,7 @@ class PostItem extends Component {
       author: PropTypes.string.isRequired,
       voteScore: PropTypes.number.isRequired,
       timestamp: PropTypes.number.isRequired,
+      comments: PropTypes.array.isRequired,
     }).isRequired,
     categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     actions: PropTypes.shape({
@@ -90,6 +91,11 @@ class PostItem extends Component {
                   bsStyle="info"
                   onClick={event => event.target.blur()}>
                   <Glyphicon glyph="tag" /> {post.category}
+                </Button>
+              </LinkContainer>
+              <LinkContainer to={`/posts/${post.id}`}>
+                <Button bsSize="xsmall">
+                  <Glyphicon glyph="comment" /> {post.comments.length}
                 </Button>
               </LinkContainer>
             </span>

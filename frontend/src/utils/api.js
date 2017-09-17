@@ -16,6 +16,11 @@ export const getPosts = () =>
     .then(res => res.json())
     .then(posts => posts);
 
+export const getPostsByCategory = category =>
+  fetch(`${api}/${category}/posts`, { headers })
+    .then(res => res.json())
+    .then(posts => posts);
+
 export const postPost = postData =>
   fetch(`${api}/posts`, {
     method: 'POST',
@@ -33,3 +38,8 @@ export const votePost = data =>
   })
     .then(res => res.json())
     .then(post => post);
+
+export const getPostComments = postId =>
+  fetch(`${api}/posts/${postId}/comments`, { headers })
+    .then(res => res.json())
+    .then(comments => comments);
