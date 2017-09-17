@@ -10,9 +10,7 @@ const Categories = props => (
       <h2>Categories</h2>
       <ListGroup>
         {props.categories.map(category => (
-          <LinkContainer
-            to={`/categories/${category.path}`}
-            key={category.name}>
+          <LinkContainer to={`/${category.path}`} key={category.name}>
             <ListGroupItem>{category.name}</ListGroupItem>
           </LinkContainer>
         ))}
