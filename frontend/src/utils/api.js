@@ -24,3 +24,12 @@ export const postPost = postData =>
   })
     .then(res => res.json())
     .then(post => post);
+
+export const votePost = data =>
+  fetch(`${api}/posts/${data.id}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  })
+    .then(res => res.json())
+    .then(post => post);

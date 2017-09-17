@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -11,7 +12,10 @@ import {
   DropdownButton,
   MenuItem,
   Button,
+  Glyphicon,
 } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import { votePost } from '../../actions/posts';
 import * as sortOptions from '../../utils/sortOptions';
 import timestampToDate from '../../utils/timestampToDate';
 import './Posts.css';
@@ -32,7 +36,7 @@ class Posts extends Component {
   };
 
   render() {
-    const { posts, category } = this.props;
+    const { posts, category, actions } = this.props;
     const { sortBy, isModalOpen } = this.state;
     const filteredItems = posts.filter(
       item => !category || item.category === category,
@@ -40,6 +44,13 @@ class Posts extends Component {
     const sortedItems = filteredItems.sort(
       sortOptions.getCompareFunction(sortBy),
     );
+    const voteScoreToString = voteScore => {
+      if (voteScore > 0) {
+        return `+${voteScore}`;
+      }
+
+      return voteScore;
+    };
 
     return (
       <Jumbotron>
@@ -73,15 +84,47 @@ class Posts extends Component {
           <ListGroup>
             {sortedItems.map(post => (
               <ListGroupItem
-                key={post.id}
-                header={post.title}
-                href={`/post/${post.id}`}>
-                <span className="post-details">
-                  <span className="post-details__author">{post.author}</span>
-                  <span className="post-details__additional">
-                    <Label bsStyle="primary">{post.voteScore}</Label>{' '}
+                className="post"
+                header={
+                  <LinkContainer to={`/post/${post.id}`}>
+                    <a className="post__link">
+                      <h3 className="post__header">{post.title}</h3>
+                    </a>
+                  </LinkContainer>
+                }
+                key={post.id}>
+                <span className="post__details">
+                  <span className="post__author">{post.author}</span>
+                  <span className="post__additional">
+                    <span className="btn-group">
+                      <Button
+                        bsSize="xsmall"
+                        onClick={() => {
+                          actions.votePost({
+                            id: post.id,
+                            option: 'downVote',
+                          });
+                        }}>
+                        <Glyphicon glyph="minus" />
+                      </Button>
+                      <Button
+                        className="post__vote-score"
+                        bsStyle="primary"
+                        bsSize="xsmall"
+                        disabled>
+                        {voteScoreToString(post.voteScore)}
+                      </Button>
+                      <Button bsSize="xsmall">
+                        <Glyphicon
+                          glyph="plus"
+                          onClick={() => {
+                            actions.votePost({ id: post.id, option: 'upVote' });
+                          }}
+                        />
+                      </Button>
+                    </span>
                     <Label bsStyle="info">{post.category}</Label>
-                    <span className="post-details__date">
+                    <span className="post__date">
                       {timestampToDate(post.timestamp)}
                     </span>
                   </span>
@@ -104,13 +147,22 @@ function mapStateToProps({ posts }) {
   return { posts };
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({ votePost }, dispatch),
+  };
+}
+
 Posts.propTypes = {
   category: PropTypes.string,
   posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  actions: PropTypes.shape({
+    votePost: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 Posts.defaultProps = {
   category: '',
 };
 
-export default connect(mapStateToProps)(Posts);
+export default connect(mapStateToProps, mapDispatchToProps)(Posts);
