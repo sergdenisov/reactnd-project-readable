@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { Route } from 'react-router-dom';
 import { Navbar, Grid, Jumbotron } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { getCategories } from '../../actions/categories';
+import { getPosts } from '../../actions/posts';
 import Categories from '../Categories/Categories';
 import Posts from '../Posts/Posts';
 
 class App extends Component {
+  componentDidMount() {
+    this.props.actions.getCategories();
+    this.props.actions.getPosts();
+  }
+
   render() {
     return (
       <div>
@@ -39,4 +49,17 @@ class App extends Component {
   }
 }
 
-export default App;
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({ getCategories, getPosts }, dispatch),
+  };
+}
+
+App.propTypes = {
+  actions: PropTypes.shape({
+    getCategories: PropTypes.func.isRequired,
+    getPosts: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(App);
