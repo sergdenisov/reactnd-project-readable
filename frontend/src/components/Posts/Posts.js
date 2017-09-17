@@ -38,13 +38,14 @@ class Posts extends Component {
   };
 
   render() {
-    const { posts } = this.props;
+    const { posts, category } = this.props;
     const { sortBy, isModalOpen } = this.state;
     const sortedItems = posts.sort(sortOptions.getCompareFunction(sortBy));
 
     return (
       <Jumbotron>
         <Grid>
+          {category && <h1>Posts by category: {category}</h1>}
           <div className="posts">
             <h2>Posts</h2>
             <ButtonToolbar className="posts__sort">
@@ -90,7 +91,11 @@ class Posts extends Component {
             ))}
           </ListGroup>
         </Grid>
-        <PostModal isOpen={isModalOpen} onClose={this.closeModal} />
+        <PostModal
+          isOpen={isModalOpen}
+          onClose={this.closeModal}
+          fixedCategory={category}
+        />
       </Jumbotron>
     );
   }
@@ -107,10 +112,15 @@ function mapDispatchToProps(dispatch) {
 }
 
 Posts.propTypes = {
-  posts: PropTypes.PropTypes.arrayOf(PropTypes.object).isRequired,
-  actions: PropTypes.PropTypes.shape({
+  category: PropTypes.string,
+  posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  actions: PropTypes.shape({
     getPosts: PropTypes.func.isRequired,
   }).isRequired,
+};
+
+Posts.defaultProps = {
+  category: '',
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Posts);
