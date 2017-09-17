@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { Route, withRouter } from 'react-router-dom';
-import { Navbar, Grid, Jumbotron } from 'react-bootstrap';
+import { Navbar, Grid, Jumbotron, PageHeader } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -39,7 +39,7 @@ class App extends Component {
             <div>
               <Jumbotron>
                 <Grid>
-                  <h1>Main page</h1>
+                  <PageHeader>Main page</PageHeader>
                 </Grid>
               </Jumbotron>
               <Categories />
