@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import { Route } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import { Navbar, Grid, Jumbotron } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCategories } from '../../actions/categories';
@@ -21,7 +22,9 @@ class App extends Component {
         <Navbar inverse>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href="/">Redux Nanodegree&apos;s Project: Readable</a>
+              <LinkContainer to="/">
+                <a>Redux Nanodegree&apos;s Project: Readable</a>
+              </LinkContainer>
             </Navbar.Brand>
           </Navbar.Header>
         </Navbar>
@@ -62,4 +65,4 @@ App.propTypes = {
   }).isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(App);
+export default withRouter(connect(null, mapDispatchToProps)(App));
