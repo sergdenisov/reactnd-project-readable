@@ -20,7 +20,9 @@ class PostModal extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ category: nextProps.categories[0].name });
+    const { fixedCategory, categories } = nextProps;
+
+    this.setState({ category: fixedCategory || categories[0].name });
   }
 
   handleFormControlChange = event => {
@@ -30,7 +32,7 @@ class PostModal extends Component {
   };
 
   render() {
-    const { isOpen, onClose, actions, categories } = this.props;
+    const { isOpen, onClose, actions, categories, fixedCategory } = this.props;
     const { author, title, category, body } = this.state;
 
     return (
@@ -42,7 +44,7 @@ class PostModal extends Component {
             onClose();
           }}>
           <Modal.Header closeButton>
-            <Modal.Title>Add a new post</Modal.Title>
+            <Modal.Title>Add new post</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <FormGroup>
@@ -65,20 +67,22 @@ class PostModal extends Component {
                 onChange={this.handleFormControlChange}
               />
             </FormGroup>
-            <FormGroup>
-              <ControlLabel>Category</ControlLabel>
-              <FormControl
-                componentClass="select"
-                name="category"
-                value={category}
-                onChange={this.handleFormControlChange}>
-                {categories.map(item => (
-                  <option value={item.name} key={item.name}>
-                    {item.name}
-                  </option>
-                ))}
-              </FormControl>
-            </FormGroup>
+            {!fixedCategory && (
+              <FormGroup>
+                <ControlLabel>Category</ControlLabel>
+                <FormControl
+                  componentClass="select"
+                  name="category"
+                  value={category}
+                  onChange={this.handleFormControlChange}>
+                  {categories.map(item => (
+                    <option value={item.name} key={item.name}>
+                      {item.name}
+                    </option>
+                  ))}
+                </FormControl>
+              </FormGroup>
+            )}
             <FormGroup>
               <ControlLabel>Body</ControlLabel>
               <FormControl
@@ -115,7 +119,8 @@ function mapDispatchToProps(dispatch) {
 PostModal.propTypes = {
   isOpen: PropTypes.bool,
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
-  actions: PropTypes.PropTypes.shape({
+  fixedCategory: PropTypes.string,
+  actions: PropTypes.shape({
     postPost: PropTypes.func.isRequired,
   }).isRequired,
   onClose: PropTypes.func.isRequired,
@@ -123,6 +128,7 @@ PostModal.propTypes = {
 
 PostModal.defaultProps = {
   isOpen: false,
+  fixedCategory: '',
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);

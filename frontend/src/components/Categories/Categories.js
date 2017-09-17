@@ -45,7 +45,7 @@ function mapDispatchToProps(dispatch) {
 
 Categories.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
-  actions: PropTypes.PropTypes.shape({
+  actions: PropTypes.shape({
     getCategories: PropTypes.func.isRequired,
   }).isRequired,
 };

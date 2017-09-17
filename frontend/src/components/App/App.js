@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Grid, Jumbotron } from 'react-bootstrap';
 import Categories from '../Categories/Categories';
 import Posts from '../Posts/Posts';
 
@@ -20,10 +20,19 @@ class App extends Component {
           path="/"
           render={() => (
             <div>
+              <Jumbotron>
+                <Grid>
+                  <h1>Main page</h1>
+                </Grid>
+              </Jumbotron>
               <Categories />
               <Posts />
             </div>
           )}
+        />
+        <Route
+          path="/categories/:category"
+          render={props => <Posts category={props.match.params.category} />}
         />
       </div>
     );
