@@ -48,7 +48,7 @@ class App extends Component {
           )}
         />
         <Route
-          path="/categories/:category"
+          path="/:category"
           render={props => <Posts category={props.match.params.category} />}
         />
       </div>

@@ -45,7 +45,7 @@ class PostItem extends Component {
       <ListGroupItem
         className="post-item"
         header={
-          <LinkContainer to={`/post/${post.id}`}>
+          <LinkContainer to={`/${categoryPath}/${post.id}`}>
             <a className="post-item__link">
               <h3 className="post-item__header">{post.title}</h3>
             </a>
@@ -85,7 +85,7 @@ class PostItem extends Component {
                   />
                 </Button>
               </span>
-              <LinkContainer to={`/categories/${categoryPath}`}>
+              <LinkContainer to={`/${categoryPath}`}>
                 <Button
                   bsSize="xsmall"
                   bsStyle="info"
@@ -93,7 +93,7 @@ class PostItem extends Component {
                   <Glyphicon glyph="tag" /> {post.category}
                 </Button>
               </LinkContainer>
-              <LinkContainer to={`/posts/${post.id}`}>
+              <LinkContainer to={`/${categoryPath}/${post.id}`}>
                 <Button bsSize="xsmall">
                   <Glyphicon glyph="comment" /> {post.comments.length}
                 </Button>
