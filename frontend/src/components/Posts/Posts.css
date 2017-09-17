@@ -8,22 +8,40 @@
     margin-bottom: 10px;
   }
 
-.post-details {
-  display: block;
-}
+.post {}
 
-  .post-details__author {
+  .post__link {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .post__header {
+    margin: 10px 0 5px;
+    color: #333;
+  }
+
+  .post__details {
+    display: block;
+  }
+
+  .post__author {
     display: block;
     font-size: 16px;
   }
 
-  .post-details__additional {
+  .post__additional {
     display: block;
     font-size: 14px;
-    margin-top: 7px;
+    margin-top: 13px;
   }
 
-  .post-details__date {
+  .post__date {
     font-style: italic;
     float: right;
+  }
+
+  .post__vote-score {
+    opacity: 1 !important;
+    cursor: default !important;
+    min-width: 26px;
   }
