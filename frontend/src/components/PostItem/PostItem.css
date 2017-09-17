@@ -40,3 +40,8 @@
     display: inline-block;
     vertical-align: middle;
   }
+
+  .post-item__main {
+    float: right;
+    margin-top: 10px;
+  }

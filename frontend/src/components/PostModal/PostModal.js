@@ -11,6 +11,13 @@ import {
 } from 'react-bootstrap';
 import { postPost } from '../../actions/posts';
 
+const defaultState = {
+  author: '',
+  title: '',
+  category: '',
+  body: '',
+};
+
 class PostModal extends Component {
   static propTypes = {
     isOpen: PropTypes.bool,
@@ -27,18 +34,18 @@ class PostModal extends Component {
     fixedCategory: '',
   };
 
-  state = {
-    author: '',
-    title: '',
-    category: '',
-    body: '',
-  };
+  state = { ...defaultState };
 
   componentWillReceiveProps(nextProps) {
     const { fixedCategory, categories } = nextProps;
 
     this.setState({ category: fixedCategory || categories[0].name });
   }
+
+  handleClose = () => {
+    this.setState({ ...defaultState });
+    this.props.onClose();
+  };
 
   handleFormControlChange = event => {
     const { name, value } = event.target;
@@ -47,16 +54,16 @@ class PostModal extends Component {
   };
 
   render() {
-    const { isOpen, onClose, actions, categories, fixedCategory } = this.props;
+    const { isOpen, actions, categories, fixedCategory } = this.props;
     const { author, title, category, body } = this.state;
 
     return (
-      <Modal show={isOpen} onHide={onClose} restoreFocus={false}>
+      <Modal show={isOpen} onHide={this.handleClose} restoreFocus={false}>
         <form
           onSubmit={event => {
             event.preventDefault();
             actions.postPost(this.state);
-            onClose();
+            this.handleClose();
           }}>
           <Modal.Header closeButton>
             <Modal.Title>Add new post</Modal.Title>
@@ -110,7 +117,7 @@ class PostModal extends Component {
             </FormGroup>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={this.handleClose}>Close</Button>
             <Button bsStyle="primary" type="submit">
               Add post
             </Button>
