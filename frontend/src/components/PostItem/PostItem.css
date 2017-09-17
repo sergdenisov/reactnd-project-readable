@@ -1,0 +1,42 @@
+.post-item {}
+
+  .post-item__link {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .post-item__header {
+    margin: 10px 0 5px;
+    color: #333;
+  }
+
+  .post-item__details {
+    display: block;
+  }
+
+  .post-item__author {
+    display: block;
+    font-size: 16px;
+  }
+
+  .post-item__additional {
+    display: block;
+    font-size: 14px;
+    margin-top: 13px;
+  }
+
+  .post-item__date {
+    font-style: italic;
+    float: right;
+  }
+
+  .post-item__vote-score {
+    opacity: 1 !important;
+    cursor: default !important;
+    min-width: 26px;
+  }
+
+  .post-item__toolbar {
+    display: inline-block;
+    vertical-align: middle;
+  }
