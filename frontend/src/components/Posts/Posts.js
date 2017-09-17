@@ -7,7 +7,6 @@ import {
   Jumbotron,
   ListGroup,
   ListGroupItem,
-  Label,
   ButtonToolbar,
   DropdownButton,
   MenuItem,
@@ -36,7 +35,7 @@ class Posts extends Component {
   };
 
   render() {
-    const { posts, category, actions } = this.props;
+    const { posts, category, actions, categories } = this.props;
     const { sortBy, isModalOpen } = this.state;
     const filteredItems = posts.filter(
       item => !category || item.category === category,
@@ -96,34 +95,49 @@ class Posts extends Component {
                 <span className="post__details">
                   <span className="post__author">{post.author}</span>
                   <span className="post__additional">
-                    <span className="btn-group">
-                      <Button
-                        bsSize="xsmall"
-                        onClick={() => {
-                          actions.votePost({
-                            id: post.id,
-                            option: 'downVote',
-                          });
-                        }}>
-                        <Glyphicon glyph="minus" />
-                      </Button>
-                      <Button
-                        className="post__vote-score"
-                        bsStyle="primary"
-                        bsSize="xsmall"
-                        disabled>
-                        {voteScoreToString(post.voteScore)}
-                      </Button>
-                      <Button bsSize="xsmall">
-                        <Glyphicon
-                          glyph="plus"
+                    <span className="post__toolbar btn-toolbar">
+                      <span className="btn-group">
+                        <Button
+                          bsSize="xsmall"
                           onClick={() => {
-                            actions.votePost({ id: post.id, option: 'upVote' });
-                          }}
-                        />
-                      </Button>
+                            actions.votePost({
+                              id: post.id,
+                              option: 'downVote',
+                            });
+                          }}>
+                          <Glyphicon glyph="minus" />
+                        </Button>
+                        <Button
+                          className="post__vote-score"
+                          bsStyle="primary"
+                          bsSize="xsmall"
+                          disabled>
+                          {voteScoreToString(post.voteScore)}
+                        </Button>
+                        <Button bsSize="xsmall">
+                          <Glyphicon
+                            glyph="plus"
+                            onClick={() => {
+                              actions.votePost({
+                                id: post.id,
+                                option: 'upVote',
+                              });
+                            }}
+                          />
+                        </Button>
+                      </span>
+                      <LinkContainer
+                        to={`/categories/${categories.find(
+                          item => item.name === post.category,
+                        ).path}`}>
+                        <Button
+                          bsSize="xsmall"
+                          bsStyle="info"
+                          onClick={event => event.target.blur()}>
+                          <Glyphicon glyph="tag" /> {post.category}
+                        </Button>
+                      </LinkContainer>
                     </span>
-                    <Label bsStyle="info">{post.category}</Label>
                     <span className="post__date">
                       {timestampToDate(post.timestamp)}
                     </span>
@@ -143,8 +157,8 @@ class Posts extends Component {
   }
 }
 
-function mapStateToProps({ posts }) {
-  return { posts };
+function mapStateToProps({ posts, categories }) {
+  return { posts, categories };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -156,6 +170,7 @@ function mapDispatchToProps(dispatch) {
 Posts.propTypes = {
   category: PropTypes.string,
   posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   actions: PropTypes.shape({
     votePost: PropTypes.func.isRequired,
   }).isRequired,
