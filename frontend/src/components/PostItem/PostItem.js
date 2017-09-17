@@ -37,6 +37,8 @@ class PostItem extends Component {
 
   render() {
     const { post, actions, categories } = this.props;
+    const category = categories.find(item => item.name === post.category);
+    const categoryPath = category ? category.path : '';
 
     return (
       <ListGroupItem
@@ -82,10 +84,7 @@ class PostItem extends Component {
                   />
                 </Button>
               </span>
-              <LinkContainer
-                to={`/categories/${categories.find(
-                  item => item.name === post.category,
-                ).path}`}>
+              <LinkContainer to={`/categories/${categoryPath}`}>
                 <Button
                   bsSize="xsmall"
                   bsStyle="info"
