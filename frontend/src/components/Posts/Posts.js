@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -10,6 +11,7 @@ import {
   MenuItem,
   Button,
 } from 'react-bootstrap';
+import { getPosts } from '../../actions/posts';
 import * as sortOptions from '../../utils/sortOptions';
 import './Posts.css';
 import PostModal from '../PostModal/PostModal';
@@ -17,6 +19,9 @@ import PostItem from '../PostItem/PostItem';
 
 class Posts extends Component {
   static propTypes = {
+    actions: PropTypes.shape({
+      getPosts: PropTypes.func.isRequired,
+    }).isRequired,
     category: PropTypes.string,
     posts: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
@@ -29,6 +34,12 @@ class Posts extends Component {
     sortBy: sortOptions.getDefault(),
     isModalOpen: false,
   };
+
+  componentDidMount() {
+    const { category, actions } = this.props;
+
+    actions.getPosts(category);
+  }
 
   openModal = () => {
     this.setState({ isModalOpen: true });
@@ -95,4 +106,10 @@ function mapStateToProps({ posts, categories }) {
   return { posts, categories };
 }
 
-export default connect(mapStateToProps)(Posts);
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({ getPosts }, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Posts);

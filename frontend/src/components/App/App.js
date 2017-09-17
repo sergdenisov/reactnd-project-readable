@@ -6,7 +6,6 @@ import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCategories } from '../../actions/categories';
-import { getPosts } from '../../actions/posts';
 import Categories from '../Categories/Categories';
 import Posts from '../Posts/Posts';
 
@@ -14,13 +13,11 @@ class App extends Component {
   static propTypes = {
     actions: PropTypes.shape({
       getCategories: PropTypes.func.isRequired,
-      getPosts: PropTypes.func.isRequired,
     }).isRequired,
   };
 
   componentDidMount() {
     this.props.actions.getCategories();
-    this.props.actions.getPosts();
   }
 
   render() {
@@ -61,7 +58,7 @@ class App extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ getCategories, getPosts }, dispatch),
+    actions: bindActionCreators({ getCategories }, dispatch),
   };
 }
 
