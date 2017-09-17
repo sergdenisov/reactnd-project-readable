@@ -100,16 +100,15 @@ class PostItem extends Component {
                   disabled>
                   {PostItem.voteScoreToString(post.voteScore)}
                 </Button>
-                <Button bsSize="xsmall">
-                  <Glyphicon
-                    glyph="plus"
-                    onClick={() => {
-                      actions.votePost({
-                        id: post.id,
-                        option: 'upVote',
-                      });
-                    }}
-                  />
+                <Button
+                  bsSize="xsmall"
+                  onClick={() => {
+                    actions.votePost({
+                      id: post.id,
+                      option: 'upVote',
+                    });
+                  }}>
+                  <Glyphicon glyph="plus" />
                 </Button>
               </span>
               <LinkContainer to={`/${categoryPath}`}>
