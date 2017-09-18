@@ -9,9 +9,11 @@ import {
   FormControl,
   ControlLabel,
 } from 'react-bootstrap';
-import { postPost } from '../../actions/posts';
+import uuidv4 from 'uuid/v4';
+import { addPost, editPost } from '../../actions/posts';
 
 const defaultState = {
+  id: '',
   author: '',
   title: '',
   category: '',
@@ -24,28 +26,55 @@ class PostModal extends Component {
     categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     fixedCategory: PropTypes.string,
     actions: PropTypes.shape({
-      postPost: PropTypes.func.isRequired,
+      addPost: PropTypes.func.isRequired,
+      editPost: PropTypes.func.isRequired,
     }).isRequired,
     onClose: PropTypes.func.isRequired,
+    post: PropTypes.shape({
+      id: PropTypes.string,
+      author: PropTypes.string,
+      title: PropTypes.string,
+      category: PropTypes.string,
+      body: PropTypes.string,
+    }),
+    isEdit: PropTypes.bool,
   };
 
   static defaultProps = {
     isOpen: false,
     fixedCategory: '',
+    post: { ...defaultState },
+    isEdit: false,
   };
 
   state = { ...defaultState };
 
   componentWillReceiveProps(nextProps) {
-    const { fixedCategory, categories } = nextProps;
+    const { fixedCategory, categories, post } = nextProps;
 
     this.setState({ category: fixedCategory || categories[0].name });
+
+    if (post.id) {
+      this.setState({ ...post });
+    } else {
+      this.setState({ id: uuidv4() });
+    }
   }
 
   handleClose = () => {
     this.setState({ ...defaultState });
     this.props.onClose();
   };
+
+  handleSubmit() {
+    const { isEdit, actions } = this.props;
+
+    if (isEdit) {
+      actions.editPost(this.state);
+    } else {
+      actions.addPost(this.state);
+    }
+  }
 
   handleFormControlChange = event => {
     const { name, value } = event.target;
@@ -54,7 +83,7 @@ class PostModal extends Component {
   };
 
   render() {
-    const { isOpen, actions, categories, fixedCategory } = this.props;
+    const { isOpen, categories, fixedCategory, isEdit } = this.props;
     const { author, title, category, body } = this.state;
 
     return (
@@ -62,23 +91,25 @@ class PostModal extends Component {
         <form
           onSubmit={event => {
             event.preventDefault();
-            actions.postPost(this.state);
+            this.handleSubmit();
             this.handleClose();
           }}>
           <Modal.Header closeButton>
-            <Modal.Title>Add new post</Modal.Title>
+            <Modal.Title>{isEdit ? 'Edit' : 'Add new'} post</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <FormGroup>
-              <ControlLabel>Author</ControlLabel>
-              <FormControl
-                type="text"
-                placeholder="Enter post author's name"
-                name="author"
-                value={author}
-                onChange={this.handleFormControlChange}
-              />
-            </FormGroup>
+            {!isEdit && (
+              <FormGroup>
+                <ControlLabel>Author</ControlLabel>
+                <FormControl
+                  type="text"
+                  placeholder="Enter post author's name"
+                  name="author"
+                  value={author}
+                  onChange={this.handleFormControlChange}
+                />
+              </FormGroup>
+            )}
             <FormGroup>
               <ControlLabel>Title</ControlLabel>
               <FormControl
@@ -89,7 +120,8 @@ class PostModal extends Component {
                 onChange={this.handleFormControlChange}
               />
             </FormGroup>
-            {!fixedCategory && (
+            {!fixedCategory &&
+            !isEdit && (
               <FormGroup>
                 <ControlLabel>Category</ControlLabel>
                 <FormControl
@@ -119,7 +151,7 @@ class PostModal extends Component {
           <Modal.Footer>
             <Button onClick={this.handleClose}>Close</Button>
             <Button bsStyle="primary" type="submit">
-              Add post
+              {isEdit ? 'Edit' : 'Add'} post
             </Button>
           </Modal.Footer>
         </form>
@@ -134,7 +166,7 @@ function mapStateToProps({ categories }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ postPost }, dispatch),
+    actions: bindActionCreators({ addPost, editPost }, dispatch),
   };
 }
 

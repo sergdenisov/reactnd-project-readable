@@ -3,6 +3,7 @@
   .post-item__link {
     display: inline-block;
     vertical-align: top;
+    color: #333 !important;
   }
 
   .post-item__header {

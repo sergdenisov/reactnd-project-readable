@@ -21,7 +21,7 @@ export const getPostsByCategory = category =>
     .then(res => res.json())
     .then(posts => posts);
 
-export const postPost = postData =>
+export const addPost = postData =>
   fetch(`${api}/posts`, {
     method: 'POST',
     headers,
@@ -49,6 +49,15 @@ export const deletePost = postId =>
     method: 'DELETE',
     headers,
     body: JSON.stringify(postId),
+  })
+    .then(res => res.json())
+    .then(post => post);
+
+export const editPost = data =>
+  fetch(`${api}/posts/${data.id}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(data),
   })
     .then(res => res.json())
     .then(post => post);
