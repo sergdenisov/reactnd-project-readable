@@ -1,23 +1,26 @@
-import { SET_POSTS, ADD_POST, EDIT_POST } from '../actions/posts';
+import { SET_POSTS, PUSH_POST, CHANGE_POST } from '../actions/posts';
 import { SET_POST_COMMENTS } from '../actions/comments';
 
-function enrichPost(post) {
-  return { comments: [], ...post };
+function enrichPost(post, comments = []) {
+  return { comments, ...post };
 }
 
 function posts(state = [], action) {
   switch (action.type) {
     case SET_POSTS:
       return action.posts.map(post => enrichPost(post));
-    case ADD_POST:
+    case PUSH_POST:
       return [...state, enrichPost(action.post)];
-    case EDIT_POST:
+    case CHANGE_POST:
       if (action.post.deleted) {
         return state.filter(item => item.id !== action.post.id);
       }
 
       return state.map(
-        item => (item.id === action.post.id ? enrichPost(action.post) : item),
+        item =>
+          item.id === action.post.id
+            ? enrichPost(action.post, item.comments)
+            : item,
       );
     case SET_POST_COMMENTS:
       return state.map(

@@ -11,6 +11,7 @@ import {
 import { LinkContainer } from 'react-router-bootstrap';
 import { votePost, deletePost } from '../../actions/posts';
 import timestampToDate from '../../utils/timestampToDate';
+import PostModal from '../PostModal/PostModal';
 import './PostItem.css';
 
 class PostItem extends Component {
@@ -42,18 +43,31 @@ class PostItem extends Component {
     return voteScore;
   }
 
-  handleDeleteButtonClick() {
+  state = {
+    isEditing: false,
+  };
+
+  openModal = () => {
+    this.setState({ isEditing: true });
+  };
+
+  closeModal = () => {
+    this.setState({ isEditing: false });
+  };
+
+  handleDeleteButtonClick = () => {
     const { actions, post } = this.props;
 
     if (window.confirm('Are you sure you want to do this post?')) {
       actions.deletePost(post.id);
     }
-  }
+  };
 
   render() {
     const { post, actions, categories } = this.props;
     const category = categories.find(item => item.name === post.category);
     const categoryPath = category ? category.path : '';
+    const { isEditing } = this.state;
 
     return (
       <ListGroupItem
@@ -66,13 +80,16 @@ class PostItem extends Component {
               </a>
             </LinkContainer>
             <ButtonToolbar className="post-item__main">
-              <Button bsSize="xsmall" bsStyle="warning">
+              <Button
+                bsSize="xsmall"
+                bsStyle="warning"
+                onClick={this.openModal}>
                 Edit
               </Button>
               <Button
                 bsSize="xsmall"
                 bsStyle="danger"
-                onClick={() => this.handleDeleteButtonClick()}>
+                onClick={this.handleDeleteButtonClick}>
                 Delete
               </Button>
             </ButtonToolbar>
@@ -130,13 +147,19 @@ class PostItem extends Component {
             </span>
           </span>
         </span>
+        <PostModal
+          isOpen={isEditing}
+          onClose={this.closeModal}
+          isEdit
+          post={post}
+        />
       </ListGroupItem>
     );
   }
 }
 
-function mapStateToProps({ posts, categories }) {
-  return { posts, categories };
+function mapStateToProps({ categories }) {
+  return { categories };
 }
 
 function mapDispatchToProps(dispatch) {

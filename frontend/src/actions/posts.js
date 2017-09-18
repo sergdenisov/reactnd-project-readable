@@ -1,10 +1,9 @@
-import uuidv4 from 'uuid/v4';
 import * as api from '../utils/api';
 import { getPostComments } from './comments';
 
 export const SET_POSTS = 'SET_POSTS';
-export const ADD_POST = 'SET_POST';
-export const EDIT_POST = 'EDIT_POST';
+export const PUSH_POST = 'SET_POST';
+export const CHANGE_POST = 'CHANGE_POST';
 
 export const setPosts = posts => ({
   type: SET_POSTS,
@@ -20,27 +19,29 @@ export const getPosts = category => dispatch => {
   });
 };
 
-export const addPost = post => ({
-  type: ADD_POST,
+export const pushPost = post => ({
+  type: PUSH_POST,
   post,
 });
 
-export const postPost = inputData => dispatch =>
+export const addPost = inputData => dispatch =>
   api
-    .postPost({
+    .addPost({
       ...inputData,
-      id: uuidv4(),
       timestamp: Date.now(),
     })
-    .then(post => dispatch(addPost(post)));
+    .then(post => dispatch(pushPost(post)));
 
-export const editPost = post => ({
-  type: EDIT_POST,
+export const changePost = post => ({
+  type: CHANGE_POST,
   post,
 });
 
 export const votePost = data => dispatch =>
-  api.votePost(data).then(post => dispatch(editPost(post)));
+  api.votePost(data).then(post => dispatch(changePost(post)));
 
 export const deletePost = postId => dispatch =>
-  api.deletePost(postId).then(post => dispatch(editPost(post)));
+  api.deletePost(postId).then(post => dispatch(changePost(post)));
+
+export const editPost = data => dispatch =>
+  api.editPost(data).then(post => dispatch(changePost(post)));
