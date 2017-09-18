@@ -14,17 +14,58 @@ class PostItem extends Component {
     post: PropTypes.shape({
       id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
+      body: PropTypes.string.isRequired,
       category: PropTypes.string.isRequired,
     }).isRequired,
     categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     actions: PropTypes.shape({
       deletePost: PropTypes.func.isRequired,
     }).isRequired,
+    isSingle: PropTypes.bool,
+    onDelete: PropTypes.func,
+  };
+
+  static defaultProps = {
+    isSingle: false,
+    onDelete: null,
   };
 
   state = {
     isEditing: false,
   };
+
+  getButtons() {
+    return (
+      <ButtonToolbar className="post-item__main">
+        <Button bsSize="xsmall" bsStyle="warning" onClick={this.openModal}>
+          Edit
+        </Button>
+        <Button
+          bsSize="xsmall"
+          bsStyle="danger"
+          onClick={this.handleDeleteButtonClick}>
+          Delete
+        </Button>
+      </ButtonToolbar>
+    );
+  }
+
+  getContent(categoryPath) {
+    const { post } = this.props;
+    const { isEditing } = this.state;
+
+    return (
+      <span>
+        <PostDetails post={post} categoryPath={categoryPath} />
+        <PostModal
+          isOpen={isEditing}
+          onClose={this.closeModal}
+          isEdit
+          post={post}
+        />
+      </span>
+    );
+  }
 
   openModal = () => {
     this.setState({ isEditing: true });
@@ -35,18 +76,28 @@ class PostItem extends Component {
   };
 
   handleDeleteButtonClick = () => {
-    const { actions, post } = this.props;
+    const { actions, post, onDelete } = this.props;
 
     if (window.confirm('Are you sure you want to do this post?')) {
       actions.deletePost(post.id);
+      onDelete && onDelete();
     }
   };
 
   render() {
-    const { post, categories } = this.props;
+    const { post, categories, isSingle } = this.props;
     const category = categories.find(item => item.name === post.category);
     const categoryPath = category ? category.path : '';
-    const { isEditing } = this.state;
+
+    if (isSingle) {
+      return (
+        <div className="post-item">
+          <p>{post.body}</p>
+          {this.getButtons()}
+          {this.getContent(categoryPath)}
+        </div>
+      );
+    }
 
     return (
       <ListGroupItem
@@ -58,29 +109,10 @@ class PostItem extends Component {
                 <h3 className="post-item__header">{post.title}</h3>
               </a>
             </LinkContainer>
-            <ButtonToolbar className="post-item__main">
-              <Button
-                bsSize="xsmall"
-                bsStyle="warning"
-                onClick={this.openModal}>
-                Edit
-              </Button>
-              <Button
-                bsSize="xsmall"
-                bsStyle="danger"
-                onClick={this.handleDeleteButtonClick}>
-                Delete
-              </Button>
-            </ButtonToolbar>
+            {this.getButtons()}
           </div>
         }>
-        <PostDetails post={post} categoryPath={categoryPath} />
-        <PostModal
-          isOpen={isEditing}
-          onClose={this.closeModal}
-          isEdit
-          post={post}
-        />
+        {this.getContent(categoryPath)}
       </ListGroupItem>
     );
   }

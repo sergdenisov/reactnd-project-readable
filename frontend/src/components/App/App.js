@@ -7,6 +7,7 @@ import { getCategories } from '../../actions/categories';
 import Navigation from '../Navigation/Navigation';
 import MainView from '../MainView/MainView';
 import CategoryView from '../CategoryView/CategoryView';
+import PostView from '../PostView/PostView';
 
 class App extends Component {
   static propTypes = {
@@ -25,6 +26,7 @@ class App extends Component {
         <Navigation />
         <Route exact path="/" component={MainView} />
         <Route exact path="/:category" component={CategoryView} />
+        <Route exact path="/:category/:postId" component={PostView} />
       </div>
     );
   }

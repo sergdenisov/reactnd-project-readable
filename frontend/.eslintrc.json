@@ -18,8 +18,9 @@
   },
   "rules": {
     "no-alert": "off",
-    "react/jsx-filename-extension": [1, {"extensions": [".js"]}],
     "no-underscore-dangle": ["error", {"allow": ["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]}],
+    "no-unused-expressions": ["error", { "allowShortCircuit": true }],
+    "react/jsx-filename-extension": [1, {"extensions": [".js"]}],
     "prettier/prettier": ["error", {"singleQuote": true, "trailingComma": "all", "jsxBracketSameLine": true}]
   },
   "env": {
