@@ -1,5 +1,14 @@
 .post-item {}
 
+  .post-item__body {
+    display: block;
+    margin: 10px 0;
+  }
+
+  .post-item__content {
+    display: block;
+  }
+
   .post-item__link {
     display: inline-block;
     vertical-align: top;
@@ -15,3 +24,7 @@
     float: right;
     margin-top: 10px;
   }
+
+    .post-item__main_single {
+      margin: 0;
+    }

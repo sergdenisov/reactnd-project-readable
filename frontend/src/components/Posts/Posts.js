@@ -24,10 +24,12 @@ class Posts extends Component {
     }).isRequired,
     category: PropTypes.string,
     posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+    parentId: PropTypes.string,
   };
 
   static defaultProps = {
     category: '',
+    parentId: null,
   };
 
   state = {
@@ -50,9 +52,12 @@ class Posts extends Component {
   };
 
   render() {
-    const { posts, category } = this.props;
+    const { posts, category, parentId } = this.props;
     const { sortBy, isModalOpen } = this.state;
-    const filteredItems = posts.filter(
+    const items = parentId
+      ? posts.find(item => item.id === parentId).comments
+      : posts;
+    const filteredItems = items.filter(
       item => !category || item.category === category,
     );
     const sortedItems = filteredItems.sort(
@@ -64,7 +69,7 @@ class Posts extends Component {
         <Grid>
           {category && <h1>Posts by category: {category}</h1>}
           <div className="posts">
-            <h2>Posts</h2>
+            <h2>{parentId ? 'Comments' : 'Posts'}</h2>
             <ButtonToolbar className="posts__sort">
               <DropdownButton
                 title={
@@ -76,7 +81,7 @@ class Posts extends Component {
                   this.setState({ sortBy: eventKey });
                   event.target.blur();
                 }}
-                id="posts-sort">
+                id={`${parentId ? 'comments' : 'posts'}-sort`}>
                 {sortOptions.getAll().map(([key, value]) => (
                   <MenuItem eventKey={key} active={key === sortBy} key={key}>
                     {value}
@@ -84,18 +89,21 @@ class Posts extends Component {
                 ))}
               </DropdownButton>
               <Button bsStyle="primary" onClick={this.openModal}>
-                Add post
+                Add {parentId ? 'comment' : 'post'}
               </Button>
             </ButtonToolbar>
           </div>
           <ListGroup>
-            {sortedItems.map(post => <PostItem post={post} key={post.id} />)}
+            {sortedItems.map(item => (
+              <PostItem post={item} isComment key={item.id} />
+            ))}
           </ListGroup>
         </Grid>
         <PostModal
           isOpen={isModalOpen}
           onClose={this.closeModal}
           fixedCategory={category}
+          post={{ parentId }}
         />
       </Jumbotron>
     );

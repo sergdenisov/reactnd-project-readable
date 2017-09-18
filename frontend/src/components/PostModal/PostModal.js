@@ -12,12 +12,13 @@ import {
 import uuidv4 from 'uuid/v4';
 import { addPost, editPost } from '../../actions/posts';
 
-const defaultState = {
+const defaultPost = {
   id: '',
   author: '',
   title: '',
   category: '',
   body: '',
+  parentId: '',
 };
 
 class PostModal extends Component {
@@ -36,6 +37,7 @@ class PostModal extends Component {
       title: PropTypes.string,
       category: PropTypes.string,
       body: PropTypes.string,
+      parentId: PropTypes.string,
     }),
     isEdit: PropTypes.bool,
   };
@@ -43,11 +45,11 @@ class PostModal extends Component {
   static defaultProps = {
     isOpen: false,
     fixedCategory: '',
-    post: { ...defaultState },
+    post: { ...defaultPost },
     isEdit: false,
   };
 
-  state = { ...defaultState };
+  state = { ...defaultPost };
 
   componentWillReceiveProps(nextProps) {
     const { fixedCategory, categories, post } = nextProps;
@@ -57,12 +59,12 @@ class PostModal extends Component {
     if (post.id) {
       this.setState({ ...post });
     } else {
-      this.setState({ id: uuidv4() });
+      this.setState({ id: uuidv4(), parentId: post.parentId });
     }
   }
 
   handleClose = () => {
-    this.setState({ ...defaultState });
+    this.setState({ ...defaultPost });
     this.props.onClose();
   };
 
@@ -84,7 +86,8 @@ class PostModal extends Component {
 
   render() {
     const { isOpen, categories, fixedCategory, isEdit } = this.props;
-    const { author, title, category, body } = this.state;
+    const { author, title, category, body, parentId } = this.state;
+    const type = parentId ? 'comment' : 'post';
 
     return (
       <Modal show={isOpen} onHide={this.handleClose} restoreFocus={false}>
@@ -95,7 +98,9 @@ class PostModal extends Component {
             this.handleClose();
           }}>
           <Modal.Header closeButton>
-            <Modal.Title>{isEdit ? 'Edit' : 'Add new'} post</Modal.Title>
+            <Modal.Title>
+              {isEdit ? 'Edit' : 'Add new'} {type}
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {!isEdit && (
@@ -103,25 +108,28 @@ class PostModal extends Component {
                 <ControlLabel>Author</ControlLabel>
                 <FormControl
                   type="text"
-                  placeholder="Enter post author's name"
+                  placeholder={`Enter ${type} author's name`}
                   name="author"
                   value={author}
                   onChange={this.handleFormControlChange}
                 />
               </FormGroup>
             )}
-            <FormGroup>
-              <ControlLabel>Title</ControlLabel>
-              <FormControl
-                type="text"
-                placeholder="Enter post's title"
-                name="title"
-                value={title}
-                onChange={this.handleFormControlChange}
-              />
-            </FormGroup>
+            {!parentId && (
+              <FormGroup>
+                <ControlLabel>Title</ControlLabel>
+                <FormControl
+                  type="text"
+                  placeholder={`Enter ${type}'s title`}
+                  name="title"
+                  value={title}
+                  onChange={this.handleFormControlChange}
+                />
+              </FormGroup>
+            )}
             {!fixedCategory &&
-            !isEdit && (
+            !isEdit &&
+            !parentId && (
               <FormGroup>
                 <ControlLabel>Category</ControlLabel>
                 <FormControl
@@ -141,7 +149,7 @@ class PostModal extends Component {
               <ControlLabel>Body</ControlLabel>
               <FormControl
                 componentClass="textarea"
-                placeholder="Enter post's body"
+                placeholder={`Enter ${type}'s body`}
                 name="body"
                 value={body}
                 onChange={this.handleFormControlChange}
@@ -151,7 +159,7 @@ class PostModal extends Component {
           <Modal.Footer>
             <Button onClick={this.handleClose}>Close</Button>
             <Button bsStyle="primary" type="submit">
-              {isEdit ? 'Edit' : 'Add'} post
+              {isEdit ? 'Edit' : 'Add'} {type}
             </Button>
           </Modal.Footer>
         </form>
