@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { Route, withRouter } from 'react-router-dom';
-import { Navbar, Grid, Jumbotron, PageHeader } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCategories } from '../../actions/categories';
-import Categories from '../Categories/Categories';
-import Posts from '../Posts/Posts';
+import Navigation from '../Navigation/Navigation';
+import MainView from '../MainView/MainView';
+import CategoryView from '../CategoryView/CategoryView';
 
 class App extends Component {
   static propTypes = {
@@ -23,34 +22,9 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Navbar inverse>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <LinkContainer to="/">
-                <a>Redux Nanodegree&apos;s Project: Readable</a>
-              </LinkContainer>
-            </Navbar.Brand>
-          </Navbar.Header>
-        </Navbar>
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <div>
-              <Jumbotron>
-                <Grid>
-                  <PageHeader>Main page</PageHeader>
-                </Grid>
-              </Jumbotron>
-              <Categories />
-              <Posts />
-            </div>
-          )}
-        />
-        <Route
-          path="/:category"
-          render={props => <Posts category={props.match.params.category} />}
-        />
+        <Navigation />
+        <Route exact path="/" component={MainView} />
+        <Route exact path="/:category" component={CategoryView} />
       </div>
     );
   }

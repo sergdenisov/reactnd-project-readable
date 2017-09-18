@@ -45,3 +45,10 @@ export const deletePost = postId => dispatch =>
 
 export const editPost = data => dispatch =>
   api.editPost(data).then(post => dispatch(changePost(post)));
+
+export const getPost = postId => dispatch => {
+  api.getPost(postId).then(post => {
+    dispatch(changePost(post));
+    dispatch(getPostComments(post.id));
+  });
+};

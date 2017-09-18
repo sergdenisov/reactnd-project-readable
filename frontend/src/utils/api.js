@@ -61,3 +61,8 @@ export const editPost = data =>
   })
     .then(res => res.json())
     .then(post => post);
+
+export const getPost = postId =>
+  fetch(`${api}/posts/${postId}`, { headers })
+    .then(res => res.json())
+    .then(post => post);
