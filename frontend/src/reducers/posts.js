@@ -16,6 +16,10 @@ function posts(state = [], action) {
         return state.filter(item => item.id !== action.post.id);
       }
 
+      if (state.length === 0) {
+        return [enrichPost(action.post)];
+      }
+
       return state.map(
         item =>
           item.id === action.post.id

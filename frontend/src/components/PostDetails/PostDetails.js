@@ -65,7 +65,7 @@ const PostDetails = props => {
               <Glyphicon glyph="tag" /> {post.category}
             </Button>
           </LinkContainer>
-          <LinkContainer to={`/${categoryPath}/${post.id}`}>
+          <LinkContainer to={`/${categoryPath}/${post.id}`} activeClassName={''}>
             <Button bsSize="xsmall">
               <Glyphicon glyph="comment" /> {post.comments.length}
             </Button>
@@ -85,7 +85,7 @@ PostDetails.propTypes = {
     author: PropTypes.string.isRequired,
     voteScore: PropTypes.number.isRequired,
     timestamp: PropTypes.number.isRequired,
-    comments: PropTypes.array.isRequired,
+    comments: PropTypes.array,
   }).isRequired,
   actions: PropTypes.shape({
     votePost: PropTypes.func.isRequired,
