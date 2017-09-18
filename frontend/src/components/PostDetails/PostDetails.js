@@ -57,19 +57,25 @@ const PostDetails = props => {
               <Glyphicon glyph="plus" />
             </Button>
           </span>
-          <LinkContainer to={`/${categoryPath}`}>
-            <Button
-              bsSize="xsmall"
-              bsStyle="info"
-              onClick={event => event.target.blur()}>
-              <Glyphicon glyph="tag" /> {post.category}
-            </Button>
-          </LinkContainer>
-          <LinkContainer to={`/${categoryPath}/${post.id}`} activeClassName={''}>
-            <Button bsSize="xsmall">
-              <Glyphicon glyph="comment" /> {post.comments.length}
-            </Button>
-          </LinkContainer>
+          {!post.parentId && (
+            <LinkContainer to={`/${categoryPath}`}>
+              <Button
+                bsSize="xsmall"
+                bsStyle="info"
+                onClick={event => event.target.blur()}>
+                <Glyphicon glyph="tag" /> {post.category}
+              </Button>
+            </LinkContainer>
+          )}
+          {!post.parentId && (
+            <LinkContainer
+              to={`/${categoryPath}/${post.id}`}
+              activeClassName={''}>
+              <Button bsSize="xsmall">
+                <Glyphicon glyph="comment" /> {post.comments.length}
+              </Button>
+            </LinkContainer>
+          )}
         </span>
         <span className="post-item-details__date">
           {timestampToDate(post.timestamp)}

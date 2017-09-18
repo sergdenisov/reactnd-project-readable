@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Jumbotron, PageHeader } from 'react-bootstrap';
 import { getPost } from '../../actions/posts';
 import PostItem from '../PostItem/PostItem';
+import Posts from '../Posts/Posts';
 
 class PostView extends Component {
   static propTypes = {
@@ -39,12 +40,15 @@ class PostView extends Component {
     }
 
     return (
-      <Jumbotron>
-        <Grid>
-          <PageHeader>{post.title}</PageHeader>
-          <PostItem post={post} isSingle onDelete={this.handlePostDelete} />
-        </Grid>
-      </Jumbotron>
+      <div>
+        <Jumbotron>
+          <Grid>
+            <PageHeader>{post.title}</PageHeader>
+            <PostItem post={post} isSingle onDelete={this.handlePostDelete} />
+          </Grid>
+        </Jumbotron>
+        <Posts parentId={post.id} />
+      </div>
     );
   }
 }
