@@ -2,7 +2,7 @@ import * as api from '../utils/api';
 import { getPostComments } from './comments';
 
 export const SET_POSTS = 'SET_POSTS';
-export const PUSH_POST = 'SET_POST';
+export const PUSH_POST = 'PUSH_POST';
 export const CHANGE_POST = 'CHANGE_POST';
 
 export const setPosts = posts => ({
