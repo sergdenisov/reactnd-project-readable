@@ -6,6 +6,7 @@ import { ListGroupItem, Button, ButtonToolbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import classnames from 'classnames';
 import { deletePost } from '../../actions/posts';
+import { deleteComment } from '../../actions/comments';
 import PostDetails from '../PostDetails/PostDetails';
 import PostModal from '../PostModal/PostModal';
 import './PostItem.css';
@@ -22,6 +23,7 @@ class PostItem extends Component {
     categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     actions: PropTypes.shape({
       deletePost: PropTypes.func.isRequired,
+      deleteComment: PropTypes.func.isRequired,
     }).isRequired,
     isSingle: PropTypes.bool,
     onDelete: PropTypes.func,
@@ -91,7 +93,12 @@ class PostItem extends Component {
           : 'post'}?`,
       )
     ) {
-      actions.deletePost(post.id);
+      if (post.parentId) {
+        actions.deleteComment(post.id);
+      } else {
+        actions.deletePost(post.id);
+      }
+
       onDelete && onDelete();
     }
   };
@@ -140,7 +147,7 @@ function mapStateToProps({ categories }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ deletePost }, dispatch),
+    actions: bindActionCreators({ deletePost, deleteComment }, dispatch),
   };
 }
 

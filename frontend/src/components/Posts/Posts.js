@@ -38,9 +38,11 @@ class Posts extends Component {
   };
 
   componentDidMount() {
-    const { category, actions } = this.props;
+    const { category, actions, parentId } = this.props;
 
-    actions.getPosts(category);
+    if (!parentId) {
+      actions.getPosts(category);
+    }
   }
 
   openModal = () => {

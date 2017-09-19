@@ -11,6 +11,7 @@ import {
 } from 'react-bootstrap';
 import uuidv4 from 'uuid/v4';
 import { addPost, editPost } from '../../actions/posts';
+import { getComment, addComment, editComment } from '../../actions/comments';
 
 const defaultPost = {
   id: '',
@@ -29,6 +30,9 @@ class PostModal extends Component {
     actions: PropTypes.shape({
       addPost: PropTypes.func.isRequired,
       editPost: PropTypes.func.isRequired,
+      getComment: PropTypes.func.isRequired,
+      addComment: PropTypes.func.isRequired,
+      editComment: PropTypes.func.isRequired,
     }).isRequired,
     onClose: PropTypes.func.isRequired,
     post: PropTypes.shape({
@@ -52,9 +56,21 @@ class PostModal extends Component {
   state = { ...defaultPost };
 
   componentWillReceiveProps(nextProps) {
-    const { fixedCategory, categories, post } = nextProps;
+    const { fixedCategory, categories, post, actions } = nextProps;
 
-    this.setState({ category: fixedCategory || categories[0].name });
+    if (
+      post.parentId &&
+      nextProps.isOpen &&
+      !this.props.isOpen &&
+      nextProps.isEdit
+    ) {
+      actions.getComment(post.id);
+      return;
+    }
+
+    this.setState({
+      category: fixedCategory || (categories.length && categories[0].name),
+    });
 
     if (post.id) {
       this.setState({ ...post });
@@ -69,10 +85,16 @@ class PostModal extends Component {
   };
 
   handleSubmit() {
-    const { isEdit, actions } = this.props;
+    const { isEdit, actions, post } = this.props;
 
     if (isEdit) {
-      actions.editPost(this.state);
+      if (post.parentId) {
+        actions.editComment(this.state);
+      } else {
+        actions.editPost(this.state);
+      }
+    } else if (post.parentId) {
+      actions.addComment(this.state);
     } else {
       actions.addPost(this.state);
     }
@@ -174,7 +196,10 @@ function mapStateToProps({ categories }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ addPost, editPost }, dispatch),
+    actions: bindActionCreators(
+      { addPost, editPost, getComment, addComment, editComment },
+      dispatch,
+    ),
   };
 }
 
